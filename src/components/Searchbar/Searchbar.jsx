@@ -17,6 +17,7 @@ export default class SearchBar extends Component {
   handleSubmitForm = e => {
     e.preventDefault();
     this.props.onSubmit(this.state.value);
+    this.setState({ value: '' });
   };
   render() {
     const { value } = this.state;
