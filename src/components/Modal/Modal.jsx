@@ -1,32 +1,38 @@
-import { Component } from 'react';
+import { useEffect, useCallback } from 'react';
 import { ModalWindow, Overlay } from './Modal.styled';
+import PropTypes from 'prop-types';
 
-export class Modal extends Component {
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyDown);
-  }
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyDown);
-  }
-  handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      this.props.toogleModal();
-    }
-  };
+export const Modal = ({ toogleModal, photo }) => {
+  const handleKeyDown = useCallback(
+    e => {
+      if (e.code === 'Escape') {
+        toogleModal();
+      }
+    },
+    [toogleModal]
+  );
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]);
 
-  handleCloseModal = e => {
+  const handleCloseModal = e => {
     if (e.target === e.currentTarget) {
-      this.props.toogleModal();
+      toogleModal();
     }
   };
-  render() {
-    const { photo } = this.props;
-    return (
-      <Overlay onClick={this.handleCloseModal}>
-        <ModalWindow>
-          <img src={photo} alt="" />
-        </ModalWindow>
-      </Overlay>
-    );
-  }
-}
+  return (
+    <Overlay onClick={handleCloseModal}>
+      <ModalWindow>
+        <img src={photo} alt="" />
+      </ModalWindow>
+    </Overlay>
+  );
+};
+
+Modal.propTypes = {
+  toogleModal: PropTypes.func,
+  photo: PropTypes.string,
+};
