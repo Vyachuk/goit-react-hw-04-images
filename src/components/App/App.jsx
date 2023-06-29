@@ -72,7 +72,9 @@ export const App = () => {
       {isModalOpen ? (
         <Modal photo={largePhoto} toogleModal={handleToogleModal} />
       ) : null}
-      {Math.ceil(totalPhoto / 12) !== page && !isLoading && totalPhoto ? (
+      {Math.ceil(totalPhoto / 12) !== page &&
+      !isLoading &&
+      totalPhoto.length > 0 ? (
         <Button onLoadMore={handleLoadMore} />
       ) : null}
       {isLoading ? <Loader /> : null}
