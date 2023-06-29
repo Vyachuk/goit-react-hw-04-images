@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { getPhoto } from 'services/fetchData';
-import { AppWrapper } from './App.styled';
+import { AppWrapper, Text } from './App.styled';
 import { Button } from '../Button/Button';
 import { ImageGallery } from '../ImageGallery/ImageGallery';
 import { Loader } from '../Loader/Loader';
@@ -64,12 +64,18 @@ export class App extends Component {
     }));
   };
   render() {
-    const { photos, isModalOpen, largePhoto, totalPhoto, page, isLoading } =
+    const { q, photos, isModalOpen, largePhoto, totalPhoto, page, isLoading } =
       this.state;
+    console.log(this.state.photos);
     return (
       <AppWrapper>
         <Searchbar onSubmit={this.handleSearchSubmit} />
-        <ImageGallery photoList={photos} showModal={this.handleOpenModal} />
+        {photos.length > 0 ? (
+          <ImageGallery photoList={photos} showModal={this.handleOpenModal} />
+        ) : (
+          <Text>We can't find photo of {q} request! Please try again!</Text>
+        )}
+
         {isModalOpen ? (
           <Modal photo={largePhoto} toogleModal={this.handleToogleModal} />
         ) : null}
