@@ -1,36 +1,29 @@
 import { Component } from 'react';
 import { getPhoto } from 'services/fetchData';
 import { AppWrapper } from './App.styled';
-import { Button } from './Button/Button';
-import { ImageGallery } from './ImageGallery/ImageGallery';
-import { Loader } from './Loader/Loader';
-import { Modal } from './Modal/Modal';
-import Searchbar from './Searchbar/Searchbar';
+import { Button } from '../Button/Button';
+import { ImageGallery } from '../ImageGallery/ImageGallery';
+import { Loader } from '../Loader/Loader';
+import { Modal } from '../Modal/Modal';
+import Searchbar from '../Searchbar/Searchbar';
 
 export class App extends Component {
   state = {
     q: '',
     page: 1,
     photos: [],
-    isModalOpen: false,
     largePhoto: '',
     totalPhoto: null,
     isLoading: false,
+    isModalOpen: false,
   };
   componentDidMount() {
     this.setState({ q: 'Ukraine flag' });
   }
   componentDidUpdate(prevProps, prevState) {
-    const { q, page, isModalOpen } = this.state;
+    const { q, page } = this.state;
     if (prevState.q !== q || prevState.page !== page) {
       this.fetchPhotos();
-    }
-    if (prevState.isModalOpen !== isModalOpen) {
-      window.addEventListener('keydown', e => {
-        if (e.code === 'Escape') {
-          this.handleToogleModal();
-        }
-      });
     }
   }
 
