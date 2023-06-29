@@ -74,7 +74,7 @@ export const App = () => {
       ) : null}
       {Math.ceil(totalPhoto / 12) !== page &&
       !isLoading &&
-      totalPhoto.length > 0 ? (
+      photos.length > 0 ? (
         <Button onLoadMore={handleLoadMore} />
       ) : null}
       {isLoading ? <Loader /> : null}
