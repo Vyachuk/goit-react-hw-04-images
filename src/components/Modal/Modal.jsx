@@ -1,22 +1,19 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { ModalWindow, Overlay } from './Modal.styled';
 import PropTypes from 'prop-types';
 
 export const Modal = ({ toogleModal, photo }) => {
-  const handleKeyDown = useCallback(
-    e => {
+  useEffect(() => {
+    const handleKeyDown = e => {
       if (e.code === 'Escape') {
         toogleModal();
       }
-    },
-    [toogleModal]
-  );
-  useEffect(() => {
+    };
     document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleKeyDown]);
+  }, [toogleModal]);
 
   const handleCloseModal = e => {
     if (e.target === e.currentTarget) {

@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getPhoto } from 'services/fetchData';
 import { AppWrapper, Text } from './App.styled';
 import { Button } from '../Button/Button';
@@ -6,57 +6,49 @@ import { ImageGallery } from '../ImageGallery/ImageGallery';
 import { Loader } from '../Loader/Loader';
 import { Modal } from '../Modal/Modal';
 import { Searchbar } from '../Searchbar/Searchbar';
-import { photoReducer } from 'services/photoReducer';
-
-const INITIAL_STATE = {
-  q: 'Ukraine flag',
-  page: 1,
-  photos: [],
-  largePhoto: '',
-  totalPhoto: null,
-  isLoading: false,
-  isModalOpen: false,
-};
 
 export const App = () => {
-  const [state, dispatch] = useReducer(photoReducer, INITIAL_STATE);
-  const { q, photos, isModalOpen, largePhoto, totalPhoto, page, isLoading } =
-    state;
-
-  const fetchPhotos = useCallback(async () => {
-    dispatch({ type: 'setIsLoading', payload: true });
-    try {
-      const getData = await getPhoto({
-        q,
-        page,
-      });
-      dispatch({ type: 'setTotalPhoto', payload: getData.totalHits });
-      dispatch({ type: 'setPhotos', payload: getData.hits });
-    } catch (error) {
-    } finally {
-      dispatch({ type: 'setIsLoading', payload: false });
-    }
-  }, [page, q]);
+  const [q, setQ] = useState('Ukraine flag');
+  const [page, setPage] = useState(1);
+  const [photos, setPhotos] = useState([]);
+  const [largePhoto, setLargePhoto] = useState('');
+  const [totalPhoto, setTotalPhoto] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
+    const fetchPhotos = async () => {
+      setIsLoading(true);
+      try {
+        const getData = await getPhoto({
+          q,
+          page,
+        });
+        setTotalPhoto(getData.totalHits);
+        setPhotos(prev => [...prev, ...getData.hits]);
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
+    };
     fetchPhotos();
-  }, [q, page, fetchPhotos]);
+  }, [q, page]);
 
   const handleSearchSubmit = text => {
-    dispatch({ type: 'setPhotos', payload: [] });
-    dispatch({ type: 'setQ', payload: text });
-    dispatch({ type: 'setPage', payload: 1 });
+    setPhotos([]);
+    setQ(text);
+    setPage(1);
   };
   const handleOpenModal = photo => {
     handleToogleModal();
-    dispatch({ type: 'setLargePhoto', payload: photo });
+    setLargePhoto(photo);
   };
   const handleToogleModal = () => {
-    dispatch({ type: 'setIsModalOpen' });
+    setIsModalOpen(prev => !prev);
   };
 
   const handleLoadMore = () => {
-    dispatch({ type: 'setPage', payload: 1 });
+    setPage(prev => prev + 1);
   };
 
   return (

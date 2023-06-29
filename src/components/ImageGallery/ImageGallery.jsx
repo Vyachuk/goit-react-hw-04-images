@@ -7,7 +7,7 @@ export const ImageGallery = ({ photoList, showModal }) => {
     <ImageGalleryList>
       {photoList.map(photo => (
         <ImageGalleryItem
-          key={photo.id + photo.imageSize / photo.likes}
+          key={Number(photo.id) + Number(photo.likes)}
           photoItem={photo}
           showModal={showModal}
         />
